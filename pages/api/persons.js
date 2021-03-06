@@ -1,5 +1,4 @@
 import Person from "../../models/Person";
-import dbConnect from "../../utils/dbConnect";
 
 export default async (req, res) => {
 

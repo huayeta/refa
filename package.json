@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node ./server/server.js",
+    "dev": "nodemon ./server/server.js",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "antd": "^4.13.0",
+    "axios": "^0.21.1",
+    "express": "^4.17.1",
+    "moment": "^2.29.1",
     "mongoose": "^5.11.18",
     "next": "10.0.7",
+    "nodemon": "^2.0.7",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   }
