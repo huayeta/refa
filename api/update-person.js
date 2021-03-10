@@ -19,7 +19,8 @@ const updatePerson = async (req, res) => {
         });
         if(person.account)return res.send({
             code: 2,
-            message: person
+            message: '已上传过了',
+            person:person
         })
         // 更新
         await person.updateOne(body).exec();

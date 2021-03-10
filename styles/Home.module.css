@@ -127,3 +127,6 @@
 .red{
     color: red;
 }
+.noSelect{
+    user-select: none;
+}

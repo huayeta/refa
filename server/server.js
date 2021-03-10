@@ -5,6 +5,7 @@ const dbContent = require('../utils/dbConnect');
 const addPerson = require('../api/add-person');
 const updatePerson = require('../api/update-person');
 const Persons = require('../api/persons');
+const updatePersonId = require('../api/update-person-id');
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production';
@@ -33,7 +34,8 @@ dbContent().then(()=>{
 
         app.post('/api/add-person', addPerson);
         app.post('/api/update-person', updatePerson);
-        app.get('/api/persons',Persons)
+        app.get('/api/persons',Persons);
+        app.post('/api/update-person-id',updatePersonId);
 
         app.all('*', (req, res) => {
             return handle(req, res)
