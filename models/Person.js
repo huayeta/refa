@@ -11,7 +11,8 @@ const PersonSchema = new mongoose.Schema({
     pig_id: Number,
     task_title: String,
     type: { type: Number, default: 0}, // 1淘宝单，2拼多多单
-    shop_type: { type: Number,default: 0},// 0分不清楚，1万阁，2广裕隆，3艾跃
+    // 0分不清楚，1万阁，2广裕隆，3艾跃
+    shop_type: { type: Number,default: 0},
     phone: Number,
     name: String,// 姓名
     sex: {type: Number, default: 0},// 0保密，1男，2女
@@ -26,6 +27,8 @@ const PersonSchema = new mongoose.Schema({
     // 旺旺号
     account: String,
     order_id: String, // 订单
+    // 产品id
+    product_id: String,
     order_create_time: Date, // 订单创建时间
     order_appraise_time: Date, // 订单评价时间
     order_default_appraise_time: Date, // 订单默认评价时间

@@ -128,5 +128,13 @@
     color: red;
 }
 .noSelect{
-    user-select: none;
+    /*user-select: none;*/
+}
+.txtarea{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+.txtarea textarea{
+    margin-right: 15px;
 }

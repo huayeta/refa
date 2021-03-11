@@ -1,7 +1,7 @@
 const Person = require('../models/Person');
 
 const Persons = async (req, res) => {
-    const {qq, phone, shop_type,task_type} = req.query;
+    const {qq, phone, shop_type,type} = req.query;
     let person_exec = Person.find();
     // 搜索qq
     if (qq) person_exec = person_exec.find({
@@ -14,12 +14,13 @@ const Persons = async (req, res) => {
     // 搜索店铺
     if (shop_type) person_exec = person_exec.find({shop_type});
     // 搜索任务
-    if (task_type) person_exec = person_exec.find({task_type});
-    const persons = await person_exec.sort('-pig_create_time').limit(50).exec();
-    res.send({
-        code: 0,
-        message: persons
-    })
+    if (type!== undefined && type !== '0') person_exec = person_exec.find({type});
+    person_exec.sort({'pig_create_time':"desc"}).limit(50).exec((err,persons)=>{
+        res.send({
+            code: 0,
+            message: persons
+        })
+    });
 }
 
 module.exports = Persons;

@@ -6,6 +6,8 @@ import {useState,useEffect} from 'react';
 import moment from 'moment';
 import {useRouter} from "next/router";
 
+const {TextArea} = Input;
+
 export default function Home() {
     const router = useRouter();
     const [form] = Form.useForm();
@@ -227,34 +229,75 @@ export default function Home() {
     const searchParams = new URLSearchParams(router.asPath.slice(2));
     const fetchData = async ()=>{
         const url = searchParams.toString();
-        return (await axios.get(`/api/persons?${url}`,)).data.message;
+        const persons = (await axios.get(`/api/persons?${url}`,)).data.message;
+        setPersons(persons);
     }
     const setFormValue = ()=>{
         form.setFieldsValue({
             qq:searchParams.get('qq'),
             phone:searchParams.get('phone'),
             shop_type:searchParams.get('shop_type')?searchParams.get('shop_type'):"0",
-            task_type:searchParams.get('task_type')?searchParams.get('task_type'):"0",
+            type:searchParams.get('type')?searchParams.get('type'):"0",
         })
     }
     const onFinish = (values)=>{
         router.push({query:values})
     }
     useEffect(()=>{
-        fetchData().then(res=>{
-            setPersons(res);
-        })
+        fetchData()
         setFormValue();
     },[router.query]);
+    const addQQChange = (record,index,e)=>{
+        const value = e.target.value.trim();
+        // console.log(record,index,value);
+        addPersons[index].qq = value;
+        setAddPersons(addPersons)
+    }
+    const addPerson = async (person) => {
+        const res = (await axios.post('/api/update-person', {...person})).data;
+        console.log(res);
+        await fetchData();
+    }
+    const addColumns = [
+        {
+            title:'旺旺号',
+            dataIndex:'account'
+        },
+        {
+            title: '订单号',
+            dataIndex: 'order_id'
+        },
+        {
+            title: 'qq',
+            dataIndex: 'qq',
+            render: (qq,record,index)=>{
+                return <Input type="text" value={qq} onChange={addQQChange.bind(this,record,index)} />
+            }
+        },
+        {
+            title: '操作',
+            dataIndex: 'handle',
+            render: (handle,record)=>{
+                return <Button onClick={addPerson.bind(this,record)}>插入</Button>
+            }
+        }
+    ];
+    const [addPersons,setAddPersons] = useState(JSON.parse('[{"shop_type":3,"account":"tb_2229941","order_id":"1633566711098219421","order_create_time":1615370044000,"product_id":637327644510},{"shop_type":3,"account":"王庄张大美女","order_id":"1633162034319796600","order_create_time":1615368438000,"product_id":637327644510},{"shop_type":3,"account":"qiaozhizz","order_id":"1631290717478986445","order_create_time":1615308091000,"product_id":637327644510},{"shop_type":3,"account":"小小小鱼儿_88","order_id":"1631264545970263306","order_create_time":1615306504000,"product_id":637327644510},{"shop_type":3,"account":"tyfen0713","order_id":"1260982455107055393","order_create_time":1615297573000,"product_id":637327644510},{"shop_type":3,"account":"zf675621269","order_id":"1631638875229485365","order_create_time":1615296750000,"product_id":637327644510},{"shop_type":3,"account":"迷茫少女520","order_id":"1629962028367304440","order_create_time":1615296388000,"product_id":637327644510},{"shop_type":3,"account":"幺九九四二二","order_id":"1630964953711237640","order_create_time":1615296252000,"product_id":637327644510},{"shop_type":3,"account":"简单的幸福在幸福","order_id":"1628321690956441440","order_create_time":1615207840000,"product_id":637327644510},{"shop_type":3,"account":"a124918046","order_id":"1628609871693721859","order_create_time":1615207063000,"product_id":637327644510},{"shop_type":3,"account":"为什么我还是小学渣","order_id":"1260401738192268894","order_create_time":1615206282000,"product_id":637327644510},{"shop_type":3,"account":"胡莹晶","order_id":"1628050934298309675","order_create_time":1615203150000,"product_id":637327644510},{"shop_type":3,"account":"tb55977374","order_id":"1624348692047357239","order_create_time":1615133459000,"product_id":637327644510},{"shop_type":3,"account":"yangqilove0618","order_id":"1625284477512081454","order_create_time":1615132148000,"product_id":637327644510}]'));
     return (
         <div className={styles.container}>
             <div className={styles.header}>
+                <div className={styles.txtarea}>
+                    <TextArea style={{width:'420px'}} rows={10}></TextArea>
+                    <div>
+                        <Table dataSource={addPersons} columns={addColumns} pagination={false} rowKey={record=>record.order_id} />
+                    </div>
+                </div>
                 <Form name="search" layout="inline" onFinish={onFinish} form={form}>
-                    <Form.Item name="task_type" label="任务类型">
+                    <Form.Item name="type" label="任务类型">
                         <Select>
                             <Select.Option value="0">全部类型</Select.Option>
-                            {Object.keys(task_types).map(task_type=>{
-                                return <Select.Option value={task_type} key={task_type}>{task_types[task_type]}</Select.Option>
+                            {Object.keys(task_types).map(type=>{
+                                return <Select.Option value={type} key={type}>{task_types[type]}</Select.Option>
                             })}
                         </Select>
                     </Form.Item>
